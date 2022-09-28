@@ -2,6 +2,10 @@ from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 from telethon.tl.types import InputPeerUser
 from telegram import ParseMode
+import asyncio
+
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
 
 def support_bot():
     @Bot.on(events.NewMessage(incoming=True))
