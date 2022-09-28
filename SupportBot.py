@@ -2,10 +2,8 @@ from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 from telethon.tl.types import InputPeerUser
 from telegram import ParseMode
-import asyncio
-
-loop = asyncio.new_event_loop()
-asyncio.set_event_loop(loop)
+import threading
+from streamlit.runtime.scriptrunner import add_script_run_ctx
 
 def support_bot():
     @Bot.on(events.NewMessage(incoming=True))
@@ -14,12 +12,14 @@ def support_bot():
         user_info = await event.get_input_chat()
         cont=0
 
-        username = event.chat.username if event.chat.username!=None else event.chat.first_name+' '+event.chat.last_name
         async for m in Bot.iter_messages(user_info):
             if cont>=2:
                 return
             cont+=1
-        #username = event.message
+
+        cippa = cippa = event.chat if event.chat is not None else await event.get_sender()
+        username = cippa.username if cippa.username!=None else cippa.first_name+' '+cippa.last_name
+    
         await Bot.send_message(InputPeerUser(user_info.user_id, user_info.access_hash),  
         message=("<b>👋WELCOME TO VORTEX SUPPORT!</b>\n\n"+
                 "Hi <b>{}</b>, I hope you’re well!\n"+
@@ -49,3 +49,6 @@ except Exception as ap:
     print(f"ERROR - {ap}")
     exit()
 
+t1= threading.Thread(target=support_bot)
+add_script_run_ctx(t1)
+t1.start()
