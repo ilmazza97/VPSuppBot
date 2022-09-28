@@ -2,6 +2,7 @@ from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 from telethon.tl.types import InputPeerUser
 from telegram import ParseMode
+import streamlit as st
 import asyncio
 
 loop = asyncio.new_event_loop()
@@ -40,9 +41,7 @@ def support_bot():
         ,parse_mode=ParseMode.HTML)
 
 try:
-    cont= open('conf.ini').read()
-    config=eval(cont)
-    Bot = TelegramClient(StringSession(config['session']), config['api_id'],config['api_hash'])
+    Bot = TelegramClient(StringSession(st.secrets['session']), st.secrets['api_id'],st.secrets['api_hash'])
     Bot.start()
     support_bot()
     print("Support Bot started.")
