@@ -2,8 +2,10 @@ from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 from telethon.tl.types import InputPeerUser
 from telegram import ParseMode
-import threading
-from streamlit.runtime.scriptrunner import add_script_run_ctx
+import asyncio
+
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
 
 def support_bot():
     @Bot.on(events.NewMessage(incoming=True))
@@ -48,7 +50,3 @@ try:
 except Exception as ap:
     print(f"ERROR - {ap}")
     exit()
-
-t1= threading.Thread(target=support_bot)
-add_script_run_ctx(t1)
-t1.start()
